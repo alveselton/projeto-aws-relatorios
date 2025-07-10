@@ -7,14 +7,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      TF_VAR_redis_host: redis-17111.c276.us-east-1-2.ec2.redns.redis-cloud.com
-      TF_VAR_redis_user: ${{ secrets.REDIS_USER }}
-      TF_VAR_redis_password: ${{ secrets.REDIS_PASSWORD }}
-      TF_VAR_redis_port: "17111"
-      TF_VAR_dynamodb_table_name: "relatorios"
 
     steps:
+      - name: Definir variáveis de ambiente
+        run: |
+          echo "TF_VAR_redis_host=redis-17111.c276.us-east-1-2.ec2.redns.redis-cloud.com" >> $GITHUB_ENV
+          echo "TF_VAR_redis_user=${{ secrets.REDIS_USER }}" >> $GITHUB_ENV
+          echo "TF_VAR_redis_password=${{ secrets.REDIS_PASSWORD }}" >> $GITHUB_ENV
+          echo "TF_VAR_redis_port=17111" >> $GITHUB_ENV
+          echo "TF_VAR_dynamodb_table_name=relatorios" >> $GITHUB_ENV
+
       - name: Checkout do código
         uses: actions/checkout@v3
 
