@@ -7,7 +7,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     env:
       TF_VAR_redis_host: redis-17111.c276.us-east-1-2.ec2.redns.redis-cloud.com
       TF_VAR_redis_user: ${{ secrets.REDIS_USER }}
