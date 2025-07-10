@@ -8,31 +8,46 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      TF_VAR_redis_host: redis-17111.c276.us-east-1-2.ec2.redns.redis-cloud.com
+      TF_VAR_redis_user: ${{ secrets.REDIS_USER }}
+      TF_VAR_redis_password: ${{ secrets.REDIS_PASSWORD }}
+      TF_VAR_redis_port: "17111"
+      TF_VAR_dynamodb_table_name: "relatorios"
+
     steps:
-      - name: Checkout
+      - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Setup .NET
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
-      - name: Build Lambda
+      - name: Buildar Lambda: RequestHandler
         run: |
           cd src/RequestHandler
           dotnet publish -c Release -o publish
           cd publish
-          zip -r ../../lambda.zip .
-          cd ../../..
+          zip -r ../../../lambda.zip .
+          cd ../../../
 
-      - name: Configure AWS Credentials
+      - name: Buildar Lambda: ReportProcessor
+        run: |
+          cd src/ReportProcessor
+          dotnet publish -c Release -o publish
+          cd publish
+          zip -r ../../../report_processor.zip .
+          cd ../../../
+
+      - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Setup Terraform
+      - name: Instalar Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init & Apply
