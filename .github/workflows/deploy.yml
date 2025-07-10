@@ -27,19 +27,29 @@ jobs:
 
       - name: Buildar Lambda: RequestHandler
         run: |
+          # Go to the project directory
           cd src/RequestHandler
+          # Publish the project to a 'publish' folder
           dotnet publish -c Release -o publish
+          # Go into the publish folder
           cd publish
-          zip -r ../../../lambda.zip .
-          cd ../../../
+          # Zip the contents of the publish folder, placing the zip at the repository root
+          zip -r ../../../../lambda.zip .
+          # Go back to the repository root
+          cd ../../../../
 
       - name: Buildar Lambda: ReportProcessor
         run: |
+          # Go to the project directory
           cd src/ReportProcessor
+          # Publish the project to a 'publish' folder
           dotnet publish -c Release -o publish
+          # Go into the publish folder
           cd publish
-          zip -r ../../../report_processor.zip .
-          cd ../../../
+          # Zip the contents of the publish folder, placing the zip at the repository root
+          zip -r ../../../../report_processor.zip .
+          # Go back to the repository root
+          cd ../../../../
 
       - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v2
